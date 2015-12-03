@@ -17,10 +17,9 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 
-import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -44,7 +43,7 @@ import br.com.fences.ocorrenciaentidade.ocorrencia.auxiliar.Auxiliar;
 import br.com.fences.ocorrenciaespelhobackend.config.Log;
 import br.com.fences.ocorrenciaespelhobackend.ocorrencia.provider.ColecaoEspelhoOcorrencia;
 
-@ApplicationScoped
+@RequestScoped
 public class EspelhoOcorrenciaDAO {     
 
 	@Inject

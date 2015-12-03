@@ -1,5 +1,8 @@
 package br.com.fences.ocorrenciaespelhobackend.ocorrencia.negocio;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import javax.enterprise.context.RequestScoped;
@@ -32,6 +35,23 @@ public class EspelhoOcorrenciaControleBO {
 	public Set<ControleOcorrencia> pesquisarProcessarReprocessar() {
 		Set<ControleOcorrencia> controleOcorrencias = null;
 		controleOcorrencias = espelhoOcorrenciaControleDAO.pesquisarProcessarReprocessar();
+		return controleOcorrencias;
+	}
+	
+	public String pesquisarProcessarReprocessarDataInicial() {
+		String dataInicial = espelhoOcorrenciaControleDAO.pesquisarProcessarReprocessarDataInicial();
+		return dataInicial;
+	}
+
+	public String pesquisarProcessarReprocessarDataFinal() {
+		String dataFinal = espelhoOcorrenciaControleDAO.pesquisarProcessarReprocessarDataFinal();
+		return dataFinal;
+
+	}
+	
+	public Set<ControleOcorrencia> pesquisarProcessarReprocessar(String dataInicial, String dataFinal) {
+		Set<ControleOcorrencia> controleOcorrencias = null;
+		controleOcorrencias = espelhoOcorrenciaControleDAO.pesquisarProcessarReprocessar(dataInicial, dataFinal);
 		return controleOcorrencias;
 	}
 

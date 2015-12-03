@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -25,7 +25,7 @@ import br.com.fences.ocorrenciaentidade.controle.ControleOcorrencia;
 import br.com.fences.ocorrenciaespelhobackend.ocorrencia.provider.ColecaoEspelhoOcorrenciaControle;
 
 @Named
-@ApplicationScoped
+@RequestScoped
 public class EspelhoOcorrenciaControleDAO {
 
 	@Inject
@@ -136,6 +136,70 @@ public class EspelhoOcorrenciaControleDAO {
 					new BasicDBObject("$in", Arrays.asList(
 							EstadoProcessamento.PROCESSAR.converterParaValor(),
 							EstadoProcessamento.REPROCESSAR.converterParaValor())));
+		BasicDBObject ordenacao = new BasicDBObject("datahoraRegistroBo", 1);
+		
+		MongoCursor<Document> cursor = colecao.find(pesquisa).sort(ordenacao).iterator();
+
+		try {
+			while (cursor.hasNext()) {
+				Document documento = cursor.next();
+				ControleOcorrencia controleOcorrencia = espelhoOcorrenciaControleConverter.paraObjeto(documento, ControleOcorrencia.class);
+				controleOcorrencias.add(controleOcorrencia);
+			}
+		} finally {
+			cursor.close();
+		}
+
+		return controleOcorrencias;
+	}
+	
+	public String pesquisarProcessarReprocessarDataInicial() {
+		
+		BasicDBObject pesquisa = 
+				new BasicDBObject("estadoProcessamentoOcorrencia", 
+					new BasicDBObject("$in", Arrays.asList(
+							EstadoProcessamento.PROCESSAR.converterParaValor(),
+							EstadoProcessamento.REPROCESSAR.converterParaValor())));
+		pesquisa.append("datahoraRegistroBo", new BasicDBObject("$exists", true));
+		BasicDBObject ordenacao = new BasicDBObject("datahoraRegistroBo", 1);
+		
+		Document documento = colecao.find(pesquisa).sort(ordenacao).first();
+		ControleOcorrencia controleOcorrencia = espelhoOcorrenciaControleConverter.paraObjeto(documento, ControleOcorrencia.class);
+		return controleOcorrencia.getDatahoraRegistroBo();
+	}
+	
+	public String pesquisarProcessarReprocessarDataFinal() {
+		
+		BasicDBObject pesquisa = 
+				new BasicDBObject("estadoProcessamentoOcorrencia", 
+					new BasicDBObject("$in", Arrays.asList(
+							EstadoProcessamento.PROCESSAR.converterParaValor(),
+							EstadoProcessamento.REPROCESSAR.converterParaValor())));
+		pesquisa.append("datahoraRegistroBo", new BasicDBObject("$exists", true));
+		BasicDBObject ordenacao = new BasicDBObject("datahoraRegistroBo", -1);
+		
+		Document documento = colecao.find(pesquisa).sort(ordenacao).first();
+		ControleOcorrencia controleOcorrencia = espelhoOcorrenciaControleConverter.paraObjeto(documento, ControleOcorrencia.class);
+		
+		return controleOcorrencia.getDatahoraRegistroBo();
+	}
+	
+	public Set<ControleOcorrencia> pesquisarProcessarReprocessar(String dataInicial, String dataFinal) {
+		
+		Set<ControleOcorrencia> controleOcorrencias = new LinkedHashSet<>();
+		
+		BasicDBObject pesquisa = 
+				new BasicDBObject("estadoProcessamentoOcorrencia", 
+					new BasicDBObject("$in", Arrays.asList(
+							EstadoProcessamento.PROCESSAR.converterParaValor(),
+							EstadoProcessamento.REPROCESSAR.converterParaValor())));
+
+		BasicDBObject periodo = new BasicDBObject();
+		periodo.put("$gte", dataInicial);
+		periodo.put("$lte", dataFinal);
+
+		pesquisa.put("datahoraRegistroBo", periodo);
+		
 		BasicDBObject ordenacao = new BasicDBObject("datahoraRegistroBo", 1);
 		
 		MongoCursor<Document> cursor = colecao.find(pesquisa).sort(ordenacao).iterator();

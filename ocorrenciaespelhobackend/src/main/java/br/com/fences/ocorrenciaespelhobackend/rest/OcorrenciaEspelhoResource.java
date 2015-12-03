@@ -299,6 +299,32 @@ public class OcorrenciaEspelhoResource {
 		String json = converterControleOcorrencia.paraJson(controleOcorrencias);
 		return json;
 	}
+    
+    @GET
+    @Path("espelhoOcorrenciaControle/pesquisarProcessarReprocessar/{dataInicial}/{dataFinal}")
+	public String espelhoOcorrenciaControlePesquisarProcessarReprocessar(
+			@PathParam("dataInicial") String dataInicial, @PathParam("dataFinal") String dataFinal)
+	{
+		Set<ControleOcorrencia> controleOcorrencias = espelhoOcorrenciaControleBO.pesquisarProcessarReprocessar(dataInicial, dataFinal);
+		String json = converterControleOcorrencia.paraJson(controleOcorrencias);
+		return json;
+	}
+    
+    @GET
+    @Path("espelhoOcorrenciaControle/pesquisarProcessarReprocessarDataInicial")
+	public String espelhoOcorrenciaControlePesquisarProcessarReprocessarDataInicial()
+	{
+		String data = espelhoOcorrenciaControleBO.pesquisarProcessarReprocessarDataInicial();
+		return data;
+	}
+
+    @GET
+    @Path("espelhoOcorrenciaControle/pesquisarProcessarReprocessarDataFinal")
+	public String espelhoOcorrenciaControlePesquisarProcessarReprocessarDataFinal()
+	{
+		String data = espelhoOcorrenciaControleBO.pesquisarProcessarReprocessarDataFinal();
+		return data;
+	}
 
     @GET
     @Path("controleOcorrencia/pesquisarIndiciadosProcessarReprocessar")
